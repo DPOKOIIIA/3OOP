@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <typeinfo>
 
 using namespace std;
 
@@ -16,16 +15,12 @@ istream& operator>>(istream& is, Figure& fig) {
     return is;
 }
 
-Hexagon::Hexagon() : center_x(0), center_y(0) {
-    calculateRegularVertices(1.0);
-}
-
-Hexagon::Hexagon(double side) : center_x(0), center_y(0) {
-    calculateRegularVertices(side);
-}
-
-Hexagon::Hexagon(double side, double cx, double cy) : center_x(cx), center_y(cy) {
-    calculateRegularVertices(side);
+Hexagon::Hexagon() {
+    vertices = {
+        {1.0, 0.0}, {0.5, 0.866}, {-0.5, 0.866},
+        {-1.0, 0.0}, {-0.5, -0.866}, {0.5, -0.866}
+    };
+    calculateCenterFromVertices();
 }
 
 Hexagon::Hexagon(const vector<pair<double, double>>& verts) : vertices(verts) {
@@ -45,15 +40,6 @@ Hexagon& Hexagon::operator=(const Hexagon& other) {
         center_y = other.center_y;
     }
     return *this;
-}
-
-void Hexagon::calculateRegularVertices(double side) {
-    vertices.clear();
-    vertices.resize(6);
-    for (int i = 0; i < 6; ++i) {
-        double angle = 2 * M_PI * i / 6;
-        vertices[i] = {center_x + side * cos(angle), center_y + side * sin(angle)};
-    }
 }
 
 void Hexagon::calculateCenterFromVertices() {
@@ -105,35 +91,21 @@ void Hexagon::print(ostream& os) const {
 }
 
 void Hexagon::read(istream& is) {
-    string type;
-    is >> type;
-    if (type == "regular") {
-        double side, cx, cy;
-        is >> side >> cx >> cy;
-        center_x = cx;
-        center_y = cy;
-        calculateRegularVertices(side);
-    } else if (type == "custom") {
-        vertices.clear();
-        for (int i = 0; i < 6; ++i) {
-            double x, y;
-            is >> x >> y;
-            vertices.emplace_back(x, y);
-        }
-        calculateCenterFromVertices();
+    vertices.clear();
+    for (int i = 0; i < 6; ++i) {
+        double x, y;
+        is >> x >> y;
+        vertices.emplace_back(x, y);
     }
+    calculateCenterFromVertices();
 }
 
-Octagon::Octagon() : center_x(0), center_y(0) {
-    calculateRegularVertices(1.0);
-}
-
-Octagon::Octagon(double side) : center_x(0), center_y(0) {
-    calculateRegularVertices(side);
-}
-
-Octagon::Octagon(double side, double cx, double cy) : center_x(cx), center_y(cy) {
-    calculateRegularVertices(side);
+Octagon::Octagon() {
+    vertices = {
+        {1.0, 0.0}, {0.707, 0.707}, {0.0, 1.0}, {-0.707, 0.707},
+        {-1.0, 0.0}, {-0.707, -0.707}, {0.0, -1.0}, {0.707, -0.707}
+    };
+    calculateCenterFromVertices();
 }
 
 Octagon::Octagon(const vector<pair<double, double>>& verts) : vertices(verts) {
@@ -153,15 +125,6 @@ Octagon& Octagon::operator=(const Octagon& other) {
         center_y = other.center_y;
     }
     return *this;
-}
-
-void Octagon::calculateRegularVertices(double side) {
-    vertices.clear();
-    vertices.resize(8);
-    for (int i = 0; i < 8; ++i) {
-        double angle = 2 * M_PI * i / 8;
-        vertices[i] = {center_x + side * cos(angle), center_y + side * sin(angle)};
-    }
 }
 
 void Octagon::calculateCenterFromVertices() {
@@ -213,35 +176,20 @@ void Octagon::print(ostream& os) const {
 }
 
 void Octagon::read(istream& is) {
-    string type;
-    is >> type;
-    if (type == "regular") {
-        double side, cx, cy;
-        is >> side >> cx >> cy;
-        center_x = cx;
-        center_y = cy;
-        calculateRegularVertices(side);
-    } else if (type == "custom") {
-        vertices.clear();
-        for (int i = 0; i < 8; ++i) {
-            double x, y;
-            is >> x >> y;
-            vertices.emplace_back(x, y);
-        }
-        calculateCenterFromVertices();
+    vertices.clear();
+    for (int i = 0; i < 8; ++i) {
+        double x, y;
+        is >> x >> y;
+        vertices.emplace_back(x, y);
     }
+    calculateCenterFromVertices();
 }
 
-Triangle::Triangle() : center_x(0), center_y(0) {
-    calculateRegularVertices(1.0);
-}
-
-Triangle::Triangle(double side) : center_x(0), center_y(0) {
-    calculateRegularVertices(side);
-}
-
-Triangle::Triangle(double side, double cx, double cy) : center_x(cx), center_y(cy) {
-    calculateRegularVertices(side);
+Triangle::Triangle() {
+    vertices = {
+        {0.0, 0.577}, {-0.5, -0.289}, {0.5, -0.289}
+    };
+    calculateCenterFromVertices();
 }
 
 Triangle::Triangle(const vector<pair<double, double>>& verts) : vertices(verts) {
@@ -261,15 +209,6 @@ Triangle& Triangle::operator=(const Triangle& other) {
         center_y = other.center_y;
     }
     return *this;
-}
-
-void Triangle::calculateRegularVertices(double side) {
-    vertices.clear();
-    vertices.resize(3);
-    for (int i = 0; i < 3; ++i) {
-        double angle = 2 * M_PI * i / 3;
-        vertices[i] = {center_x + side * cos(angle), center_y + side * sin(angle)};
-    }
 }
 
 void Triangle::calculateCenterFromVertices() {
@@ -305,6 +244,7 @@ pair<double, double> Triangle::center() const {
 bool Triangle::operator==(const Figure& other) const {
     const Triangle* tri = dynamic_cast<const Triangle*>(&other);
     if (!tri || vertices.size() != tri->vertices.size()) return false;
+    
     for (size_t i = 0; i < vertices.size(); ++i) {
         if (vertices[i] != tri->vertices[i]) return false;
     }
@@ -320,21 +260,11 @@ void Triangle::print(ostream& os) const {
 }
 
 void Triangle::read(istream& is) {
-    string type;
-    is >> type;
-    if (type == "regular") {
-        double side, cx, cy;
-        is >> side >> cx >> cy;
-        center_x = cx;
-        center_y = cy;
-        calculateRegularVertices(side);
-    } else if (type == "custom") {
-        vertices.clear();
-        for (int i = 0; i < 3; ++i) {
-            double x, y;
-            is >> x >> y;
-            vertices.emplace_back(x, y);
-        }
-        calculateCenterFromVertices();
+    vertices.clear();
+    for (int i = 0; i < 3; ++i) {
+        double x, y;
+        is >> x >> y;
+        vertices.emplace_back(x, y);
     }
+    calculateCenterFromVertices();
 }

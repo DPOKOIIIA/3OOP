@@ -25,13 +25,10 @@ class Hexagon : public Figure {
 private:
     vector<pair<double, double>> vertices;
     double center_x, center_y;
-    void calculateRegularVertices(double side);
     void calculateCenterFromVertices();
 
 public:
     Hexagon();
-    Hexagon(double side);
-    Hexagon(double side, double cx, double cy);
     Hexagon(const vector<pair<double, double>>& verts);
     Hexagon(const Hexagon& other);
     Hexagon(Hexagon&& other) noexcept;
@@ -48,13 +45,10 @@ class Octagon : public Figure {
 private:
     vector<pair<double, double>> vertices;
     double center_x, center_y;
-    void calculateRegularVertices(double side);
     void calculateCenterFromVertices();
 
 public:
     Octagon();
-    Octagon(double side);
-    Octagon(double side, double cx, double cy);
     Octagon(const vector<pair<double, double>>& verts);
     Octagon(const Octagon& other);
     Octagon(Octagon&& other) noexcept;
@@ -71,13 +65,10 @@ class Triangle : public Figure {
 private:
     vector<pair<double, double>> vertices;
     double center_x, center_y;
-    void calculateRegularVertices(double side);
     void calculateCenterFromVertices();
 
 public:
     Triangle();
-    Triangle(double side);
-    Triangle(double side, double cx, double cy);
     Triangle(const vector<pair<double, double>>& verts);
     Triangle(const Triangle& other);
     Triangle(Triangle&& other) noexcept;

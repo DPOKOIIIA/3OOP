@@ -7,20 +7,20 @@ using namespace std;
 
 int main() {
     vector<unique_ptr<Figure>> figures;
-    cout << "Enter figures in one of the following formats:" << endl;
-    cout << "For regular figures: [type] regular [side] [center_x] [center_y]" << endl;
-    cout << "For custom figures: [type] custom [x1 y1 x2 y2 ...]" << endl;
-    cout << "Types: hexagon, octagon, triangle" << endl;
+    cout << "Enter figures by specifying vertices:" << endl;
+    cout << "Format: [type] [x1 y1 x2 y2 ...]" << endl;
+    cout << "Types and required vertices:" << endl;
+    cout << "  triangle - 3 vertices (6 numbers)" << endl;
+    cout << "  hexagon - 6 vertices (12 numbers)" << endl;
+    cout << "  octagon - 8 vertices (16 numbers)" << endl;
     cout << "Examples:" << endl;
-    cout << "  hexagon regular 1.0 0.0 0.0" << endl;
-    cout << "  triangle custom 0.0 0.0 1.0 0.0 0.5 0.866" << endl;
+    cout << "  triangle 0 0 3 0 0 4" << endl;
+    cout << "  hexagon 1 1 2 1 3 1 3 2 3 3 2 3 1 3 1 2" << endl;
     cout << "Enter 'done' to finish input" << endl;
     string type;
     while (true) {
         cin >> type;
-        if (type == "done") {
-            break;
-        }
+        if (type == "done") break;
         if (type == "hexagon") {
             auto hex = make_unique<Hexagon>();
             cin >> *hex;
@@ -42,7 +42,6 @@ int main() {
             break;
         }
     }
-    
     double totalArea = 0;
     for (const auto& fig : figures) {
         totalArea += static_cast<double>(*fig);
